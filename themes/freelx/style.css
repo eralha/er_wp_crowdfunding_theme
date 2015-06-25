@@ -1,0 +1,104 @@
+/*
+
+Theme Name:Freelx Crowdfunding
+Theme URL: 
+Description: 
+Author: Emanuel Ralha
+Author URI: 
+Version: 1.0.0
+
+*/
+.container_12 {
+  width: 100%;
+  margin-left: 0%;
+  margin-right: 0%;
+}
+.grid_1,
+.grid_2,
+.grid_3,
+.grid_4,
+.grid_5,
+.grid_6,
+.grid_7,
+.grid_8,
+.grid_9,
+.grid_10,
+.grid_11,
+.grid_12 {
+  display:inline;
+  float: left;
+  position: relative;
+  margin-left: 0.83%;
+  margin-right: 0.83%;
+}
+.alpha {
+  margin-left: 0;
+}
+
+.omega {
+  margin-right: 0;
+}
+.container_12 .grid_1 {
+  width: 6.673%;
+}
+
+.container_12 .grid_2 {
+  width: 15.007%;
+}
+
+.container_12 .grid_3 {
+  width: 23.34%;
+}
+
+.container_12 .grid_4 {
+  width: 31.673%;
+}
+
+.container_12 .grid_5 {
+  width: 40.007%;
+}
+
+.container_12 .grid_6 {
+  width: 48.34%;
+}
+
+.container_12 .grid_7 {
+  width: 56.673%;
+}
+
+.container_12 .grid_8 {
+  width: 65.007%;
+}
+
+.container_12 .grid_9 {
+  width: 73.34%;
+}
+
+.container_12 .grid_10 {
+  width: 81.673%;
+}
+
+.container_12 .grid_11 {
+  width: 90.007%;
+}
+
+.container_12 .grid_12 {
+  width: 98.34%;
+}
+
+body { background-color: #FDFDFD; }
+
+.note-editable { background-color: #fff; }
+.note-fontname,
+.note-fontsize,
+[data-name="color"],
+[data-name="height"],
+[data-name="codeview"],
+[data-name="help"],
+[data-name="fullscreen"],
+.note-recent-color { display: none; }
+
+.size-quarter { width: 25%; }
+.size-theird { width: 25%; }
+.size-half { width: 50%; }
+.size-big-half { width: 75%; }
