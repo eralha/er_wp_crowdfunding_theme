@@ -9,6 +9,14 @@ register_nav_menus( array(
     'bottom-menu' => __( 'Menu Bottom', '' )
 ) );
 
+function calcPercent($postMeta){
+    $angariado = (int) $postMeta["proj_total_angariado"][0];
+    $angariar = (int) $postMeta["proj_total_angariar"][0];
+    $angariadoPercent = ceil(($angariado * 100) / $angariar);
+
+    return $angariadoPercent;
+}
+
 function get_image_url(){
     /*
     $image_id = get_post_thumbnail_id();

@@ -21,6 +21,14 @@ function prod_precos_setup() {
 /* Create one or more meta boxes to be displayed on the post editor screen. */
 function proj_info() {
     add_meta_box(
+        'config_projeto',         // Unique ID
+        esc_html__( 'Configuração Projecto', 'config_projeto' ),       // Title
+        'config_projeto',        // Callback function
+        'projeto',                 // Admin page (or post type)
+        'normal',                   // Context
+        'default'                   // Priority
+    );
+    add_meta_box(
         'informacao_promotor',         // Unique ID
         esc_html__( 'Informação Promotor', 'informacao_promotor' ),       // Title
         'informacao_promotor',        // Callback function
@@ -38,13 +46,6 @@ function proj_info() {
     );
 }
 
-?>
-<style>
-    .field-block { margin-bottom: 10px; }
-    .field-block .field-full{ width:100%; }
-</style>
-<?php
-
 function getFieldConfig(){
     $curr_include_path = get_include_path();
 
@@ -59,21 +60,58 @@ function getFieldConfig(){
 }
 
 function generateField($fieldConfig, $object){ 
+    ?>
+    <style>
+        .field-block { 
+            position: relative;
+            margin-bottom: 10px; 
+        }
+        .editor-spacer { margin-bottom: 30px; }
+        .field-block label { font-weight: bold; }
+        .field-block textarea {
+            height: 150px;
+        }
+        .field-block .field-full{ width:100%; }
+    </style>
+    <?php
+
     $fieldConfig = $fieldConfig["fields"];
 
     for($i = 0; $i < count($fieldConfig); $i++){
         $meta_value = get_post_meta($object->ID, $fieldConfig[$i][1], true );
-    ?>
+    
+        if($fieldConfig[$i][2] === "text"){
+            ?><div class="field-block">
+                <label for=""><?php echo $fieldConfig[$i][0];?>:</label>
+                <input type="text" id="<?php echo $fieldConfig[$i][1];?>" name="<?php echo $fieldConfig[$i][1];?>" class="field-full" value="<?php echo $meta_value;?>" />
+            </div><?php
+        }
+        if($fieldConfig[$i][2] === "textarea"){
+            ?><div class="field-block editor-spacer">
+                <label for=""><?php echo $fieldConfig[$i][0];?>:</label><?php
+                wp_editor( $meta_value, $fieldConfig[$i][1], $settings = array() );
+            ?></div><?php
+        }
+        if($fieldConfig[$i][2] === "select"){
+            ?><div class="field-block editor-spacer">
+                <label for=""><?php echo $fieldConfig[$i][0];?>:</label>
+                <select name="<?php echo $fieldConfig[$i][1];?>" id="<?php echo $fieldConfig[$i][1];?>" value="<?php echo $option;?>"><?php
+                foreach ($fieldConfig[$i]["options"] as $option ) {
+                    ?><option value="<?php echo $option;?>" <?php echo ($meta_value == $option) ? "selected" : "";?>><?php echo $option;?></option><?php
+                }
+            ?></div></select><?php
+        }
+    };
 
-    <div class="field-block">
-        <label for=""><?php echo $fieldConfig[$i][0];?>:</label>
-        <input type="text" id="<?php echo $fieldConfig[$i][1];?>" name="<?php echo $fieldConfig[$i][1];?>" class="field-full" value="<?php echo $meta_value;?>" />
-    </div>
-
-    <?php };
 };
 
 /* Display the post meta box. */
+function config_projeto( $object, $box ) { 
+    wp_nonce_field( basename( __FILE__ ), 'smashing_flautist_access_nonce' );
+
+    $fieldConfig = getFieldConfig()["config_projeto"];
+    generateField($fieldConfig, $object);
+}
 function informacao_promotor( $object, $box ) { 
     wp_nonce_field( basename( __FILE__ ), 'smashing_flautist_access_nonce' );
 

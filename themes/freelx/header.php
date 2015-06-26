@@ -49,6 +49,8 @@
 
   <script src="<?php echo get_stylesheet_directory_uri();?>/js/summernote.min.js"></script>
 
+  
+
 </head>
 <body>
 <!--[if lt IE 7]>  
@@ -99,7 +101,7 @@
 
             <?php }else{?>
               <div class="navbar-form">
-                <a href="/account/"><button type="submit" class="btn btn-info"><?php echo $uinfo->display_name;?></button></a>
+                <a href="/account/"><button type="submit" class="btn btn-info">A minha conta</button></a>
                 <a href="/basket/"><button type="submit" class="btn btn-info">Doações</button></a>
                 <a href='<?php echo wp_logout_url(get_home_url());?>'><button type="submit" class="btn btn-info">Sair</button></a>
               </div>

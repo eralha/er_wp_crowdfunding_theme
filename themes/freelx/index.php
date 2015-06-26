@@ -2,64 +2,16 @@
 
     <div class="container">
       <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          
-			<div class="panel panel-default">
-			  <div class="panel-heading clearfix">
-			    <h3 class="panel-title pull-left">Card Title</h3>
-			      <a class="btn btn-default pull-right" href="#">Button</a>
-			  </div>
-			  <div class="panel-body">
-			    <p>Card content...</p>
-			  </div>
-			  <div class="panel-footer">
-			    <small>Card footer...</small>
-			  </div>
-			</div>
-
-        </div>
-        <div class="col-md-4">
-          
-          <div class="panel panel-default">
-			  <div class="panel-heading clearfix">
-			    <h3 class="panel-title pull-left">Card Title</h3>
-			      <a class="btn btn-default pull-right" href="#">
-			        <i class="fa fa-check"></i>
-			        Button
-			      </a>
-			  </div>
-			  <div class="panel-body">
-			    <p>Card content...</p>
-			  </div>
-			  <div class="panel-footer">
-			    <small>Card footer...</small>
-			  </div>
-			</div>
-
-       </div>
-        <div class="col-md-4">
-          
-
-          <div class="panel panel-default">
-			  <div class="panel-heading clearfix">
-			    <h3 class="panel-title pull-left">Card Title</h3>
-			      <a class="btn btn-default pull-right" href="#">
-			        <i class="fa fa-check"></i>
-			        Button
-			      </a>
-			  </div>
-			  <div class="panel-body">
-			    <p>Card content...</p>
-			  </div>
-			  <div class="panel-footer">
-			    <small>Card footer...</small>
-			  </div>
-			</div>
-
-
-        </div>
+      <div class="row card-loop card-loop-home">
+      	<h1 class="col-md-12 page-title page-title--center">Projectos mais recentes</h1>
       </div>
+      
+      <?php get_template_part('uc-home__recentes');?>
+
+	  <div class="center-block list-bottom-link">
+		<a class="btn btn-primary" href="/projecto/"><i class="glyphicon glyphicon-plus"></i>Veja aqui mais projectos</a>
+	  </div>
+
 
     </div> <!-- /container -->
 

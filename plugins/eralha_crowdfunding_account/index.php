@@ -29,10 +29,53 @@ if (!class_exists("eralha_crowdfunding_account")){
 			$this->metaBoxes = getFieldConfig();
 		}
 		function activationHandler(){
-			//Do activation stuff here
+			$tabea_ficheiros = $wpdb->prefix.$this->optionsName."_ficheiros";
+
+			$sqlTblFicheiros = "CREATE TABLE ".$tabea_ficheiros." 
+			(
+				`iIdFicheiro` int(8) NOT NULL auto_increment, 
+				`iData` int(32) NOT NULL, 
+				`iUserId` int(32) NOT NULL, 
+				`iPostId` int(32) NOT NULL, 
+				`vchPathFicheiro` varchar(255) NOT NULL,
+				`vchNomeFicheiro` varchar(255) NOT NULL,
+				PRIMARY KEY  (`iIdFicheiro`)
+			);";
+
+			require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
+			dbDelta($sqlTblFicheiros);
+
+			add_option($this->optionsName."_db_version", $this->dbVersion);
 		}
 		function deactivationHandler(){
-			//Do deactivation stuff here.
+			global $wpdb;
+
+			$tabea_ficheiros = $wpdb->prefix.$this->optionsName."_ficheiros";
+
+			//$wpdb->query("DROP TABLE IF EXISTS ". $tabea_ficheiros);
+		}
+
+		function reArrayFiles(&$file_post) {
+		    $file_ary = array();
+		    $file_count = count($file_post['name']);
+		    $file_keys = array_keys($file_post);
+
+		    for ($i=0; $i<$file_count; $i++) {
+		        foreach ($file_keys as $key) {
+		            $file_ary[$i][$key] = $file_post[$key][$i];
+		        }
+		    }
+		    return $file_ary;
+		}
+
+		function addPostFiles($fieldName){
+			$fileInfo = $this->reArrayFiles($_FILES[$fieldName]);
+
+			foreach ($fileInfo as $file) {
+		        if($file['name'] !== "" && $file['tmp_name'] !== ""){
+		        	print_r($file);
+		        }
+		    }
 		}
 
 		function validate($form){
@@ -75,6 +118,9 @@ if (!class_exists("eralha_crowdfunding_account")){
 					        break;
 					    case "new_proj":
 					        include "modules/account__new_proj.php";
+					        break;
+					    case "proj_list":
+					        include "modules/account__proj_list.php";
 					        break;
 					    default:
 					    	$responseHTML = "";
