@@ -15,10 +15,10 @@
 				<?php endif; ?>
 
 	        </div>
-	        <div class="col-md-4">
+	        <div class="col-md-4 card-lateral">
 	          
 
-	          <?php get_template_part('uc-home__recentes');?>
+	          <?php get_template_part('uc-lateral__projectos');?>
 
 
 	        </div>

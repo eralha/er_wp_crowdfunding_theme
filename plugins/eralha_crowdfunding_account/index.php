@@ -15,7 +15,8 @@ if (!class_exists("eralha_crowdfunding_account")){
 	class eralha_crowdfunding_account{
 
 		var $optionsName = "eralha_crowdfunding_account";
-		var $dbVersion = "0.1";
+		var $dbVersion = "0.2";
+		var $path = "/account/"; //path to account pages
 
 		function eralha_crowdfunding_account(){
 			
@@ -27,9 +28,17 @@ if (!class_exists("eralha_crowdfunding_account")){
 			include "config/postmeta__config.php";
 
 			$this->metaBoxes = getFieldConfig();
+
+			//wp_enqueue_script( 'theme-plugins', get_template_directory_uri() . '/js/plugins.js');
+			wp_enqueue_script( 'theme-functions', get_template_directory_uri() . '/js/main.js');
+
+			wp_register_style( 'bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css' );
+    		wp_enqueue_style( 'bootstrap' );
 		}
 		function activationHandler(){
+			global $wpdb;
 			$tabea_ficheiros = $wpdb->prefix.$this->optionsName."_ficheiros";
+			$table_doacoes = $wpdb->prefix.$this->optionsName."_doacoes";
 
 			$sqlTblFicheiros = "CREATE TABLE ".$tabea_ficheiros." 
 			(
@@ -37,13 +46,32 @@ if (!class_exists("eralha_crowdfunding_account")){
 				`iData` int(32) NOT NULL, 
 				`iUserId` int(32) NOT NULL, 
 				`iPostId` int(32) NOT NULL, 
+				`vchTipo` varchar(255) NOT NULL, 
 				`vchPathFicheiro` varchar(255) NOT NULL,
 				`vchNomeFicheiro` varchar(255) NOT NULL,
 				PRIMARY KEY  (`iIdFicheiro`)
 			);";
+			
+			$sqlTblDoacoes = "CREATE TABLE ".$table_doacoes." 
+			(
+				`iIdDoacao` int(8) NOT NULL auto_increment, 
+				`iData` int(32) NOT NULL, 
+				`iUserId` int(32) NOT NULL, 
+				`iProjecto` int(32) NOT NULL, 
+				`iTotal` int(32) NOT NULL, 
+				`iValorDoacao` int(32) NOT NULL, 
+				`iDoacaoGarantida` int(32) NOT NULL, 
+				`vchMetodoPagamento` varchar(32) NOT NULL, 
+				`vchEstadoPagamento` varchar(32) NOT NULL, 
+				`vchMensagem` varchar(700) NOT NULL, 
+				`vchMensagemPrivada` varchar(700) NOT NULL, 
+				`vchTelefoneContacto` varchar(700) NOT NULL, 
+				PRIMARY KEY  (`idEncomenda`)
+			);";
 
 			require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
 			dbDelta($sqlTblFicheiros);
+			dbDelta($sqlTblDoacoes);
 
 			add_option($this->optionsName."_db_version", $this->dbVersion);
 		}
@@ -55,7 +83,7 @@ if (!class_exists("eralha_crowdfunding_account")){
 			//$wpdb->query("DROP TABLE IF EXISTS ". $tabea_ficheiros);
 		}
 
-		function reArrayFiles(&$file_post) {
+		function reArrayFiles($file_post) {
 		    $file_ary = array();
 		    $file_count = count($file_post['name']);
 		    $file_keys = array_keys($file_post);
@@ -68,14 +96,45 @@ if (!class_exists("eralha_crowdfunding_account")){
 		    return $file_ary;
 		}
 
-		function addPostFiles($fieldName){
-			$fileInfo = $this->reArrayFiles($_FILES[$fieldName]);
+		function printAdminPage(){
+			echo "lorem askdjf kfjd asdkfj jds fj adsfjh <br >j jds fj adsfjh <br >j jds fj adsfjh <br >j jds fj adsfjh <br >j jds fj adsfjh <br >";
+		}
 
-			foreach ($fileInfo as $file) {
-		        if($file['name'] !== "" && $file['tmp_name'] !== ""){
-		        	print_r($file);
-		        }
-		    }
+		function addPostFiles($fieldName, $post_id){
+			//$fileInfo = $this->reArrayFiles($_FILES[$fieldName]);
+			global $wpdb;
+			$pluginDir = str_replace("", "", plugin_dir_url(__FILE__));
+
+			for($i=0; $i<count($_FILES[$fieldName]['name']); $i++) {
+			  //Get the temp file path
+			  $tmpFilePath = $_FILES[$fieldName]['tmp_name'][$i];
+
+			  //Make sure we have a filepath
+			  if ($tmpFilePath != ""){
+			    //Setup our new file path
+			    $newFilePath = $pluginDir. "/uploads/" . $_FILES[$fieldName]['name'][$i];
+
+			    $uploadPath = str_replace("http://".$_SERVER['HTTP_HOST']."/", "", $pluginDir);
+			    $uploadPath = $uploadPath."uploads/";
+			    $fileName = "user_".get_current_user_id()."_".$post_id."_".$_FILES[$fieldName]['name'][$i];
+
+				$up = move_uploaded_file($tmpFilePath, $uploadPath.$fileName);
+
+			    //Upload the file into the temp dir
+			    if($up) {
+			    	$tabea_ficheiros = $wpdb->prefix.$this->optionsName."_ficheiros";
+			    	$wpdb->insert($tabea_ficheiros, 
+						array(
+						'iData'=>time(), 
+						'iUserId'=> get_current_user_id(), 
+						'iPostId'=> $post_id, 
+						'vchTipo'=> $fieldName, 
+						'vchPathFicheiro'=> $uploadPath, 
+						'vchNomeFicheiro'=> $fileName
+					));
+			    }
+			  }
+			}
 		}
 
 		function validate($form){
@@ -110,23 +169,23 @@ if (!class_exists("eralha_crowdfunding_account")){
 			if(strpos($content, "[er-crowd-account]") !== false){
 				if(is_user_logged_in()){
 					$view = (isset($_GET["view"]))? $_GET["view"] : "info";
-					include "modules/account__nav.php";
+					include "modules/frontend/account__nav.php";
 
 					switch ($view) {
 					    case "info":
-					        include "modules/account__info.php";
+					        include "modules/frontend/account__info.php";
 					        break;
 					    case "new_proj":
-					        include "modules/account__new_proj.php";
+					        include "modules/frontend/account__new_proj.php";
 					        break;
 					    case "proj_list":
-					        include "modules/account__proj_list.php";
+					        include "modules/frontend/account__proj_list.php";
 					        break;
 					    default:
 					    	$responseHTML = "";
 					}
 				}else{
-					include "modules/account__register.php";
+					include "modules/frontend/account__register.php";
 				}
 			}
 
@@ -146,6 +205,8 @@ if (!class_exists("eralha_crowdfunding_account")){
 }
 if (class_exists("eralha_crowdfunding_account")) {
 	$eralha_crowdfunding_account_obj = new eralha_crowdfunding_account();
+	global $$_account;
+	$_account = $eralha_crowdfunding_account_obj;
 }
 
 //Actions and Filters
@@ -159,9 +220,30 @@ if (isset($eralha_crowdfunding_account_obj)) {
 		add_action('init', array($eralha_crowdfunding_account_obj, 'init'));
 		//add_action('plugins_loaded', array($eralha_crowdfunding_account_obj, 'init'));
 
+		add_action('admin_menu', 'eralha_crowdfunding_account_init');
+
 	//Filters
 		//Search the content for galery matches
 		add_filter('the_content', array($eralha_crowdfunding_account_obj, 'addContent'));
 
+	//scripts
+}
+
+//Initialize the admin panel
+if (!function_exists("eralha_crowdfunding_account_init")) {
+	function eralha_crowdfunding_account_init() {
+		global $eralha_crowdfunding_account_obj;
+		if (!isset($eralha_crowdfunding_account_obj)) {
+			return;
+		}
+		if ( function_exists('add_submenu_page') ){
+			//ADDS A LINK TO TO A SPECIFIC ADMIN PAGE
+			add_menu_page('Doações', 'Doações', 'publish_posts', 'enc-screen', array($eralha_crowdfunding_account_obj, 'printAdminPage'));
+			/*
+				add_submenu_page('enc-screen', 'Gallery List', 'Gallery List', 'publish_posts', 'enc-screen', array($eralha_basket_obj, 'printAdminPage'));
+				add_submenu_page('enc-screen', 'Create Gallery', 'Create Gallery', 'publish_posts', 'enc-screen', array($eralha_basket_obj, 'printAdminPage'));
+			*/
+		}
+	}
 }
 ?>

@@ -1,4 +1,8 @@
 <!doctype html>
+<?php 
+  global $_account;
+  global $_carrinho;
+?>
 <!--[if IE 7]>    <html class="oldie ie7" lang="pt"> <![endif]-->
 <!--[if IE 8]>    <html class="oldie ie8" lang="pt"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="pt"> <!--<![endif]-->
@@ -52,7 +56,7 @@
   
 
 </head>
-<body>
+<body><div>
 <!--[if lt IE 7]>  
   <div class="chromeframe">O seu browser de internet é <b>muito</b> antigo. <a href="http://browsehappy.com/">Actualize para um mais recente</a> ou <a href="http://www.google.com/chromeframe/?redirect=true&hl=pt-PT&quickenable=true">instale a Google Chrome Frame</a> para uma melhor experiência.</div><![endif]-->
 
@@ -65,7 +69,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">Crowdfunding Social</a>
+          <a class="navbar-brand" href="/"><i class="fa fa-users"></i> Crowdfunding Social</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
 
@@ -95,14 +99,14 @@
                   <input type="password" name="pwd" id="user_pass" size="20" tabindex="20" placeholder="Password" class="form-control">
                   <input type="hidden" name="redirect_to" value="<?php echo $_SERVER['REQUEST_URI']; ?>" />
                 </div>
-                <button type="submit" name="wp-submit" id="wp-submit" class="btn btn-success">Sign in</button>
-                <a href="/account/"><button type="submit" class="btn btn-info">Registo</button></a>
+                <button type="submit" name="wp-submit" id="wp-submit" class="btn btn-success">Entrar</button>
+                <a href="<?php echo $_account->path;?>"><div type="submit" class="btn btn-info">Registo</div></a>
               </form>
 
             <?php }else{?>
               <div class="navbar-form">
-                <a href="/account/"><button type="submit" class="btn btn-info">A minha conta</button></a>
-                <a href="/basket/"><button type="submit" class="btn btn-info">Doações</button></a>
+                <a href="<?php echo $_account->path;?>"><button type="submit" class="btn btn-info">A minha conta</button></a>
+                <a href="<?php echo $_carrinho->path;?>"><button type="submit" class="btn btn-info">Doações</button></a>
                 <a href='<?php echo wp_logout_url(get_home_url());?>'><button type="submit" class="btn btn-info">Sair</button></a>
               </div>
             <?php }?>

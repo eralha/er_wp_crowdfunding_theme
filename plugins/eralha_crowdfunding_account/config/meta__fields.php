@@ -31,12 +31,13 @@
                 array("Facebook", "proj_facebook", "text"),
                 array("Objectivo", "proj_objectivo", "text"),
                 array("Video", "proj_video_url", "text"),
+                array("Localização", "proj_localizacao", "text"),
                 array("Resumo", "proj_resumo", "textarea"),
                 array("Sobre o Projecto", "proj_sobre", "textarea"),
                 array("Sobre o Promotor", "proj_sobre_promotor", "textarea"),
                 array("Orçamento e prazos", "proj_orcamento", "textarea"),
                 array("Plano Divulgação", "proj_plano_divulgacao", "textarea"),
-                array("Níveis / Recompensas", "proj_recompensas", "textarea")
+                array("Níveis / Recompensas", "proj_recompensas", "group")
             )
         ),
     );

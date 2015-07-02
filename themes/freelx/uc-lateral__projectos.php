@@ -34,9 +34,7 @@
     
     <!-- the loop -->
     <?php while ( $the_query->have_posts() ) : $the_query->the_post(); ?>
-      <div class="col-md-4">
         <?php get_template_part('uc-post__card');?>
-      </div>
     <?php endwhile; ?>
     <!-- end of the loop -->
 
@@ -45,6 +43,6 @@
     <?php wp_reset_postdata(); ?>
 
   <?php else : ?>
-    <p><?php _e( 'Sorry, no posts matched your criteria.' ); ?></p>
+    
   <?php endif; ?>
 </div>

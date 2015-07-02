@@ -60,21 +60,6 @@ function getFieldConfig(){
 }
 
 function generateField($fieldConfig, $object){ 
-    ?>
-    <style>
-        .field-block { 
-            position: relative;
-            margin-bottom: 10px; 
-        }
-        .editor-spacer { margin-bottom: 30px; }
-        .field-block label { font-weight: bold; }
-        .field-block textarea {
-            height: 150px;
-        }
-        .field-block .field-full{ width:100%; }
-    </style>
-    <?php
-
     $fieldConfig = $fieldConfig["fields"];
 
     for($i = 0; $i < count($fieldConfig); $i++){
@@ -101,6 +86,52 @@ function generateField($fieldConfig, $object){
                 }
             ?></div></select><?php
         }
+        if($fieldConfig[$i][2] === "group") : ?>
+            <div class="field-block editor-spacer">
+                <label for="proj_recompensas">Níveis / Recompensas: </label>
+                <input type="hidden" name="<?php echo $fieldConfig[$i][1];?>" id="<?php echo $fieldConfig[$i][1];?>" value='<?php echo $meta_value;?>'/>
+                <div class="recompenssas-list">
+                    
+                </div>
+                <div class="btn btn-primary add-nivel">Adicionar nível</div>
+            </div>
+            <script>
+                (function($){
+                    $(document).ready(function(){
+                      var niveis = JSON.parse($('#<?php echo $fieldConfig[$i][1];?>').val());
+                      var template = $('#tmplNivel').html();
+
+                      function inputChange(){
+                        $('.recompenssas-list').find('input').on('input', function() {
+                            var index = $(this).parent().parent().parent().index();
+                            var prop = $(this).attr('id');
+                            niveis[index][prop] = $(this).val();
+                            $('#<?php echo $fieldConfig[$i][1];?>').val(JSON.stringify(niveis));
+                            console.log(JSON.stringify(niveis));
+                        });
+                      }
+
+                      function renderFields(){
+                        var output = '';
+                          for(i in niveis){
+                            var temp = template;
+                                temp = replaceKeys(temp, '${titulo}', niveis[i].titulo);
+                                temp = replaceKeys(temp, '${valor}', niveis[i].valor);
+                                temp = replaceKeys(temp, '${descricao}', niveis[i].descricao);
+                                temp = replaceKeys(temp, '${index}', niveis[i].index);
+                            output += temp;
+                          }
+
+                          $('.recompenssas-list').html(output);
+                          inputChange();
+                      }
+                      
+                      //first render
+                      renderFields();
+                    });
+                })(jQuery);
+            </script>
+        <?php endif;
     };
 
 };
@@ -123,6 +154,48 @@ function informacao_projeto( $object, $box ) {
 
     $fieldConfig = getFieldConfig()["informacao_projecto"];
     generateField($fieldConfig, $object);
+?>
+<style>
+    .recompenssas-list .clearfix { margin-bottom: 10px; }
+    .recompenssas-list-item { 
+      margin-left: 10px; 
+    }
+    .recompenssas-list-item .size-half { width: 70%; }
+    .recompenssas-list-item ._label {
+      width: 100px;
+      margin-top: 5px;
+      padding-right: 10px;
+      text-align: right;
+    }
+    .field-block { 
+        position: relative;
+        margin-bottom: 10px; 
+    }
+    .editor-spacer { margin-bottom: 30px; }
+    .field-block label { font-weight: bold; }
+    .field-block textarea {
+        height: 150px;
+    }
+    .field-block .field-full{ width:100%; }
+</style>
+<div id="tmplNivel" class="hidden" type="text/x-jquery-tmpl">
+    <div class="recompenssas-list-item">
+        <label for="">Nível ${index}</label>
+        <div class="clearfix">
+            <div class="pull-left _label">Titulo:</div>
+            <div class="pull-left size-half"><input type="text" class="form-control" id="titulo" value="${titulo}" /></div>
+        </div>
+        <div class="clearfix">
+            <div class="pull-left _label">Valor:</div>
+            <div class="pull-left size-half"><input type="text" class="form-control" id="valor" value="${valor}" /></div>
+        </div>
+        <div class="clearfix">
+            <div class="pull-left _label">Descricao:</div>
+            <div class="pull-left size-half"><input type="text" class="form-control" id="descricao" value="${descricao}" /></div>
+        </div>
+    </div>
+</div>
+<?php
 }
 
 /* Save the meta box's post metadata. */

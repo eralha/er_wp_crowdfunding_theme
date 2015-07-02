@@ -9,25 +9,31 @@ register_nav_menus( array(
     'bottom-menu' => __( 'Menu Bottom', '' )
 ) );
 
+function daysUntil($date){
+    return (isset($date)) ? floor((strtotime($date) - time())/60/60/24) : FALSE;
+}
+
 function calcPercent($postMeta){
     $angariado = (int) $postMeta["proj_total_angariado"][0];
     $angariar = (int) $postMeta["proj_total_angariar"][0];
-    $angariadoPercent = ceil(($angariado * 100) / $angariar);
+    $angariadoPercent = floor(($angariado * 100) / $angariar);
 
     return $angariadoPercent;
 }
 
 function get_image_url(){
-    /*
+
     $image_id = get_post_thumbnail_id();
     $image_url = wp_get_attachment_image_src($image_id, 'large');
     $image_url = $image_url[0];
-    */
+    echo $image_url;
 
+    /*
     $pID = get_the_ID();
     $meta = get_post_meta($pID);
 
     echo '/wp-content/files_mf/'.$meta["imagem_listagem"][0];
+    */
 } 
 
 
